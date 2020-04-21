@@ -1,0 +1,48 @@
+.vid{
+    width: 400px !important;
+}
+.hide-video{
+    display: none !important;
+}
+.show-video{
+    display:inherit !important;
+}
+
+.error-span{
+    color: #dc3545;
+}
+
+input[type=date]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
+
+.border-bottom-1{
+    border-bottom: 1px solid black;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: black;
+    opacity: 0.5; /* Firefox */
+    font-size: 10px;
+  }
+  
+  :-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: black;
+    opacity: 0.5;
+    font-size: 10px;
+  }
+  
+  ::-ms-input-placeholder { /* Microsoft Edge */
+    color: black;
+    opacity: 0.5;
+    font-size: 10px;
+  }
+  
+  .width-91{
+    width:91% !important;
+  }
+
+  th{
+    background-color: #007ad9 !important;
+  }

@@ -1,0 +1,1029 @@
+<div class="row pull-right" id="bread">
+    <ol class="breadcrumb breadcrumb-arrow">
+        <li><a href="#">Human Resource Management</a></li>
+        <li class="active"><span>Employee Information</span></li>
+    </ol>
+</div>
+
+<div style="height: 28px;"></div>
+
+<div [formGroup]="employeeInformationForm">
+    <p-accordion>
+        <p-accordionTab header="Employee Information" [selected]="true">
+            <div id="pnlOrganizationDetails" class="card">
+
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Date of Creation</span>
+                                <div>
+
+                                    <input matInput class="form-control
+                                        border-bottom-1"
+                                        placeholder="Please Select Date Of
+                                        Creation"
+                                        #dateOfCreation [matDatepicker]="dp"
+                                        formControlName="CreationDate">
+                                    <mat-datepicker-toggle
+                                        class="date-picker-icon-position"
+                                        matSuffix
+                                        [for]="dp">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #dp>
+                                    </mat-datepicker>
+                                    <span
+                                        *ngIf="employeeInformationForm.controls.CreationDate.errors?.required
+                                        &&
+                                        employeeInformationForm.controls.CreationDate.touched"
+                                        class="error-span">Date of Creation is
+                                        required
+                                        field.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Login User Name</span>
+                                <input type="text"
+                                    formControlName="LoginUserName"
+                                    class="form-control" maxlength="20"
+                                    placeholder="Please Select Login User Name">
+                                <span
+                                    *ngIf="employeeInformationForm.controls.LoginUserName.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.LoginUserName.touched"
+                                    class="error-span">Login User Name is
+                                    required
+                                    field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span>Employee Under</span>
+                                <mat-select class="form-control"
+                                    formControlName="Comployee"
+                                    placeholder="Please Select Employee Under">
+                                    <!-- <mat-option value="">--Select--</mat-option> -->
+                                    <mat-option value="1">Own</mat-option>
+                                    <mat-option value="0">Contractor</mat-option>
+                                </mat-select>
+                                <span
+                                    *ngIf="employeeInformationForm.controls.Comployee.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.Comployee.touched"
+                                    class="error-span">Employee Under is
+                                    required field.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span>Contractor</span>
+                                <!-- <input type="text" formControlName="Contractor" class="form-control" maxlength="10"> -->
+                                <app-auto-complete
+                                    [options]="contractOptionsList"
+                                    placeholder="Please Select Contractor"
+                                    (selectedValueChangeBlur)="contractValueChange($event)"
+                                    [selectedValueFormControl]="employeeInformationForm.controls.Contractor"
+                                    (saveitemToList)="savesContractItemToList($event)"
+                                    [maxLength]="20"></app-auto-complete>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span>Biometric ID</span>
+                                <input matInput #biometric class="form-control"
+                                    maxlength="6" (blur)="biometricIdBlur()"
+                                    placeholder="Please Enter Biometric ID"
+                                    [formControl]="employeeInformationForm.controls.BioMetricId"
+                                    [matAutocomplete]="auto">
+                                <mat-autocomplete autoActiveFirstOption
+                                    #auto="matAutocomplete"
+                                    (optionSelected)="optionSelectedBiometric($event)">
+                                    <mat-option *ngFor="let option of
+                                        biometricIdListOptions"
+                                        [value]="option">
+                                        {{option}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <span
+                                    *ngIf="employeeInformationForm.get('BioMetricId').errors?.pattern
+                                    &&
+                                    employeeInformationForm.controls.BioMetricId.touched"
+                                    class="error-span">BioMetricId can be
+                                    numbers only.</span>
+                                <span *ngIf="biometricIdError"
+                                    class="error-span">BiometricId
+                                    alreay exist, Please enter unique
+                                    one.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Employee Name</span>
+                                <!-- <input type="text" formControlName="EmployeeNmae" class="form-control employee-name-adjust"
+                            maxlength="100"> -->
+                                <input matInput
+                                    (input)="employeeInformationForm.patchValue({EmployeeNmae:
+                                    $event.target.value.toUpperCase()})"
+                                    class="form-control width-91" maxlength="50"
+                                    placeholder="Please Enter Employee Name"
+                                    [formControl]="employeeInformationForm.controls.EmployeeNmae"
+                                    [matAutocomplete]="autoEmployeeName">
+                                <mat-autocomplete autoActiveFirstOption
+                                    #autoEmployeeName="matAutocomplete"
+                                    (optionSelected)="optionSelectedEmpoyeeName($event)">
+                                    <mat-option *ngFor="let option of
+                                        employeeOptionsList" [value]="option">
+                                        {{option}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <span
+                                    *ngIf="employeeInformationForm.controls.EmployeeNmae.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.EmployeeNmae.touched"
+                                    class="error-span float-left">Employee Name
+                                    is
+                                    required field.</span>
+                                <span class="float-left width-100pc"
+                                    *ngIf="!(employeeInformationForm.controls.EmployeeNmae.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.EmployeeNmae.touched)"></span>
+                                <mat-icon *ngIf="!isFindOn" class="photo-icon"
+                                    (click)="startCameraPopup()">add_a_photo
+                                </mat-icon>
+                                <img *ngIf="employeeImage" [src]="employeeImage"
+                                    class="preview-img" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row"
+                        [class.img-next-div-adjust]="employeeImage">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Gender</span>
+                                <mat-select class="form-control"
+                                    formControlName="Gender" placeholder="Please
+                                    Select
+                                    Gender">
+                                    <mat-option value="Male">Male</mat-option>
+                                    <mat-option value="Female">Female</mat-option>
+                                </mat-select>
+                                <span
+                                    *ngIf="employeeInformationForm.controls.Gender.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.Gender.touched"
+                                    class="error-span">Gender is required field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Employee Division</span>
+                                <mat-select class="form-control"
+                                    formControlName="EmployeeDivision"
+                                    placeholder="Please Select Employee
+                                    Division">
+                                    <!-- <mat-option value="">--Select--</mat-option> -->
+                                    <mat-option value="Staff">Staff</mat-option>
+                                    <mat-option value="Worker">Worker</mat-option>
+                                </mat-select>
+                                <span
+                                    *ngIf="employeeInformationForm.controls.EmployeeDivision.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.EmployeeDivision.touched"
+                                    class="error-span">Employee Division is
+                                    required
+                                    field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <span class="label-control">Date of Birth</span>
+                                <div>
+
+                                    <input matInput class="form-control
+                                        border-bottom-1
+                                        width-96pc" [matDatepicker]="dob"
+                                        formControlName="DOB"
+                                        placeholder="Please Select
+                                        Date of Birth">
+                                    <mat-datepicker-toggle
+                                        class="date-picker-icon-position"
+                                        matSuffix
+                                        [for]="dob">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #dob>
+                                    </mat-datepicker>
+                                    <span
+                                        *ngIf="employeeInformationForm.controls.DOB.errors?.required
+                                        &&
+                                        employeeInformationForm.controls.DOB.touched"
+                                        class="error-span">Date of Birth is
+                                        required
+                                        field.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Father / Spouse Name</span>
+                                <input type="text"
+                                    formControlName="FatherSpouseName"
+                                    placeholder="Please Enter Father / Spouse
+                                    Name"
+                                    class="form-control" maxlength="30">
+                                <span
+                                    *ngIf="employeeInformationForm.controls.FatherSpouseName.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.FatherSpouseName.touched"
+                                    class="error-span">Father / Spouse Name is
+                                    required
+                                    field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Relationship</span>
+                                <input type="text"
+                                    formControlName="RelationShip"
+                                    placeholder="Please Enter Relationship"
+                                    class="form-control" maxlength="20">
+                                <span
+                                    *ngIf="employeeInformationForm.controls.RelationShip.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.RelationShip.touched"
+                                    class="error-span">Relationship is required
+                                    field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Contact Number</span>
+                                <input type="text" maxlength="14"
+                                    formControlName="ContactNumber"
+                                    placeholder="Please Enter Contact Number"
+                                    class="form-control">
+                                <!-- [pattern]="mobNumberPattern" -->
+                                <span
+                                    *ngIf="employeeInformationForm.controls.ContactNumber.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.ContactNumber.touched"
+                                    class="error-span">Contact Number is
+                                    required field.</span>
+                                <span
+                                    *ngIf="employeeInformationForm.get('ContactNumber').errors?.pattern
+                                    &&
+                                    employeeInformationForm.controls.ContactNumber.touched"
+                                    class="error-span">Contact Number can in a
+                                    format of
+                                    0XXXXXXXXXX.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Alternative Contact
+                                    No</span>
+                                <input type="text"
+                                    formControlName="AlternateContactNumber"
+                                    maxlength="10" class="form-control"
+                                    placeholder="Please Enter Alternative
+                                    Contact No">
+                                <span
+                                    *ngIf="employeeInformationForm.get('AlternateContactNumber').errors?.pattern
+                                    &&
+                                    employeeInformationForm.controls.AlternateContactNumber.touched"
+                                    class="error-span">Alternative Contact
+                                    Number can in
+                                    a format of 0XXXXXXXXXX.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Email Id</span>
+                                <input type="text" formControlName="Email"
+                                    placeholder="Please Enter Email Id"
+                                    maxlength="50"
+                                    class="form-control">
+                                <span
+                                    *ngIf="employeeInformationForm.controls.Email.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.Email.touched"
+                                    class="error-span">Email Id is required
+                                    field.</span>
+                                <span
+                                    *ngIf="employeeInformationForm.get('Email').errors?.pattern
+                                    &&
+                                    employeeInformationForm.controls.Email.touched"
+                                    class="error-span">Email Id is not valid.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Marital Status</span>
+                                <mat-select class="form-control"
+                                    formControlName="MaritalStatus"
+                                    placeholder="Please Select Marital Status">
+                                    <!-- <mat-option value="">--Select--</mat-option> -->
+                                    <mat-option value="Married">Married</mat-option>
+                                    <mat-option value="Single">Single</mat-option>
+                                    <mat-option value="Divorced">Divorced</mat-option>
+                                    <mat-option value="Widowed">Widowed</mat-option>
+                                </mat-select>
+                                <span
+                                    *ngIf="employeeInformationForm.controls.MaritalStatus.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.MaritalStatus.touched"
+                                    class="error-span">Marital Status is
+                                    required field.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+
+                            <span class="label-control">No. of Dependents</span>
+                            <input type="text" formControlName="NoOfDependends"
+                                placeholder="Please Enter No. of Dependents"
+                                class="form-control" maxlength="2">
+                            <span
+                                *ngIf="employeeInformationForm.controls.NoOfDependends.errors?.required
+                                &&
+                                employeeInformationForm.controls.NoOfDependends.touched"
+                                class="error-span">No. of Dependents is required
+                                field.</span>
+                            <span
+                                *ngIf="employeeInformationForm.get('NoOfDependends').errors?.pattern
+                                &&
+                                employeeInformationForm.controls.NoOfDependends.touched"
+                                class="error-span">No. of Dependents can be
+                                numerics
+                                only.</span>
+                        </div>
+                        <div class="col-md-4">
+
+                            <span class="label-control">Present Address</span>
+                            <textarea rows="2" cols="50" class="form-control"
+                                placeholder="Please Enter Present Address"
+                                formControlName="PresentAddress"
+                                maxlength="300">
+                            </textarea>
+                            <span
+                                *ngIf="employeeInformationForm.controls.PresentAddress.errors?.required
+                                &&
+                                employeeInformationForm.controls.PresentAddress.touched"
+                                class="error-span">Present Address is required
+                                field.</span>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Permanent Address</span>
+                                <textarea rows="2" cols="50"
+                                    class="form-control"
+                                    placeholder="Please Enter Permanent Address"
+                                    formControlName="PermanantAddress"
+                                    maxlength="300">
+                                </textarea>
+                                <span
+                                    *ngIf="employeeInformationForm.controls.PermanantAddress.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.PermanantAddress.touched"
+                                    class="error-span">Permanent Address is
+                                    required
+                                    field.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Blood Group</span>
+                                <input type="text" formControlName="BloodGroup"
+                                    placeholder="Please Enter Blood Group"
+                                    class="form-control" maxlength="20">
+                                <span
+                                    *ngIf="employeeInformationForm.controls.BloodGroup.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.BloodGroup.touched"
+                                    class="error-span">Blood Group is required
+                                    field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Department</span>
+                                <!-- <input type="text" formControlName="Department" class="form-control" maxlength="10"> -->
+                                <app-auto-complete
+                                    [options]="departmentOptionsList"
+                                    (selectedValueChangeBlur)="departmentValueChange($event)"
+                                    placeholder="Please Select Department"
+                                    [selectedValueFormControl]="employeeInformationForm.controls.Department"
+                                    (saveitemToList)="savesDepartmentItemToList($event)"
+                                    [maxLength]="20"></app-auto-complete>
+                                <span
+                                    *ngIf="employeeInformationForm.controls.Department.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.Department.touched"
+                                    class="error-span">Department is required
+                                    field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Sub Department</span>
+                                <!-- <input type="text" formControlName="SubDepartment" class="form-control" maxlength="10"> -->
+                                <app-auto-complete
+                                    [options]="subDepartmentOptionList"
+                                    (selectedValueChangeBlur)="subDepartmentValueChange($event)"
+                                    placeholder="Please Select Sub Department"
+                                    [selectedValueFormControl]="employeeInformationForm.controls.SubDepartment"
+                                    (saveitemToList)="savesSubDepartmentItemToList($event)"
+                                    [maxLength]="20">
+                                </app-auto-complete>
+                                <span
+                                    *ngIf="employeeInformationForm.controls.SubDepartment.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.SubDepartment.touched"
+                                    class="error-span">Sub Department is
+                                    required field.</span>
+                                <span *ngIf="subDepartmentError"
+                                    class="error-span">Sub
+                                    Department not found for selected
+                                    Department.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Designation</span>
+                                <!-- <input type="text" formControlName="Designation" class="form-control" maxlength="10"> -->
+                                <app-auto-complete
+                                    [options]="designationOptionList"
+                                    (selectedValueChangeBlur)="designationValueChange($event)"
+                                    placeholder="Please Select Designation"
+                                    [selectedValueFormControl]="employeeInformationForm.controls.Designation"
+                                    (saveitemToList)="saveDesignationItemToList($event)"
+                                    [maxLength]="20"></app-auto-complete>
+                                <span
+                                    *ngIf="employeeInformationForm.controls.Designation.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.Designation.touched"
+                                    class="error-span">Designation is required
+                                    field.</span>
+                                <span *ngIf="designationError"
+                                    class="error-span">Designation
+                                    not found for selected Sub
+                                    Deparment.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Skills</span>
+                                <!-- <input type="text"  formControlName="Skills" class="form-control" >maxlength="10" todo -->
+                                <app-auto-complete [options]="skillsOptionsList"
+                                    (selectedValueChangeBlur)="skillValueChange($event)"
+                                    placeholder="Please Select Skills"
+                                    [selectedValueFormControl]="employeeInformationForm.controls.Skills"
+                                    (saveitemToList)="saveskillItemToList($event)"></app-auto-complete>
+                                <span
+                                    *ngIf="employeeInformationForm.controls.Skills.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.Skills.touched"
+                                    class="error-span">Skills is required field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Employment Joining
+                                    Date</span>
+                                <div>
+
+                                    <input matInput class="form-control
+                                        border-bottom-1"
+                                        [matDatepicker]="ejd"
+                                        placeholder="Please Select Employment
+                                        Joining
+                                        Date" formControlName="EmpJoiningDate">
+                                    <mat-datepicker-toggle
+                                        class="date-picker-icon-position"
+                                        matSuffix
+                                        [for]="ejd">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #ejd>
+                                    </mat-datepicker>
+
+                                    <span
+                                        *ngIf="employeeInformationForm.controls.EmpJoiningDate.errors?.required
+                                        &&
+                                        employeeInformationForm.controls.EmpJoiningDate.touched"
+                                        class="error-span">Employment Joining
+                                        Date is
+                                        required field.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+
+                            <span class="label-control">In House Exp. as on Date
+                            </span>
+                            <input type="text"
+                                formControlName="InHouseExperience"
+                                placeholder="Please Enter In House Exp. as on
+                                Date"
+                                class="form-control">
+                            <span
+                                *ngIf="employeeInformationForm.controls.InHouseExperience.errors?.required
+                                &&
+                                employeeInformationForm.controls.InHouseExperience.touched"
+                                class="error-span">In House Exp. as on Date is
+                                required
+                                field.</span>
+                            <span
+                                *ngIf="employeeInformationForm.get('InHouseExperience').errors?.pattern
+                                &&
+                                employeeInformationForm.controls.InHouseExperience.touched"
+                                class="error-span">In House Exp. as on Date
+                                should be in
+                                format of YY.MM (00.00)</span>
+
+                        </div>
+                        <div class="col-md-4">
+
+                            <span class="label-control">Total Experience </span>
+                            <input type="text" formControlName="TotalExperience"
+                                placeholder="Please Enter Total Experience"
+                                class="form-control">
+                            <span
+                                *ngIf="employeeInformationForm.controls.TotalExperience.errors?.required
+                                &&
+                                employeeInformationForm.controls.TotalExperience.touched"
+                                class="error-span">Total Experience is required
+                                field.</span>
+                            <span
+                                *ngIf="employeeInformationForm.get('TotalExperience').errors?.pattern
+                                &&
+                                employeeInformationForm.controls.TotalExperience.touched"
+                                class="error-span">Total Experience should be in
+                                format
+                                of YY.MM (00.00)</span>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">PF Number (UIN)</span>
+                                <input type="text" formControlName="PfNumber"
+                                    placeholder="Please Enter PF Number (UIN)"
+                                    class="form-control" maxlength="25">
+                                <span
+                                    *ngIf="employeeInformationForm.controls.PfNumber.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.PfNumber.touched"
+                                    class="error-span">PF Number (UIN) is
+                                    required
+                                    field.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">ESI Number</span>
+                                <input type="text" formControlName="ESINumer"
+                                    placeholder="Please Enter ESI Number"
+                                    class="form-control" maxlength="25">
+                                <span
+                                    *ngIf="employeeInformationForm.controls.ESINumer.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.ESINumer.touched"
+                                    class="error-span">ESI Number is required
+                                    field.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Aadhar Card No</span>
+                                <input type="text"
+                                    formControlName="AadharNumber"
+                                    placeholder="Please Enter Aadhar Card No"
+                                    class="form-control" maxlength="25">
+                                <span
+                                    *ngIf="employeeInformationForm.controls.AadharNumber.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.AadharNumber.touched"
+                                    class="error-span">Aadhar Card No is
+                                    required field.</span>
+                                <span
+                                    *ngIf="employeeInformationForm.get('AadharNumber').errors?.pattern
+                                    &&
+                                    employeeInformationForm.controls.AadharNumber.touched"
+                                    class="error-span">Aadhar Card No do not
+                                    allow
+                                    space.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Passport Number</span>
+                                <input type="text"
+                                    formControlName="PassportNumber"
+                                    placeholder="Please Enter Passport Number"
+                                    class="form-control" maxlength="30">
+                                <span
+                                    *ngIf="employeeInformationForm.controls.PassportNumber.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.PassportNumber.touched"
+                                    class="error-span">Passport Number is
+                                    required
+                                    field.</span>
+                                <span
+                                    *ngIf="employeeInformationForm.get('PassportNumber').errors?.pattern
+                                    &&
+                                    employeeInformationForm.controls.PassportNumber.touched"
+                                    class="error-span">PassportNumber do not
+                                    allow
+                                    space.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Permanent Account No
+                                    (PAN)</span>
+                                <input type="text" formControlName="PanNumber"
+                                    placeholder="Please Enter Permanent Account
+                                    No
+                                    (PAN)" class="form-control" maxlength="20">
+                                <span
+                                    *ngIf="employeeInformationForm.controls.PanNumber.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.PanNumber.touched"
+                                    class="error-span">Permanent Account No
+                                    (PAN) is
+                                    required field.</span>
+                                <span
+                                    *ngIf="employeeInformationForm.get('PanNumber').errors?.pattern
+                                    &&
+                                    employeeInformationForm.controls.PanNumber.touched"
+                                    class="error-span">Permanent Account No
+                                    (PAN) do not
+                                    allow space.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <span class="label-control">Permanent or</span>
+                                <mat-select class="form-control"
+                                    formControlName="PermanantDesc"
+                                    placeholder="Please Select Permanent or">
+                                    <!-- <mat-option value="">--Select--</mat-option> -->
+                                    <mat-option value="Permanent">Permanent</mat-option>
+                                    <mat-option value="Probation">Probation</mat-option>
+                                    <mat-option value="Intern">Intern</mat-option>
+                                </mat-select>
+                                <span
+                                    *ngIf="employeeInformationForm.controls.PermanantDesc.errors?.required
+                                    &&
+                                    employeeInformationForm.controls.PermanantDesc.touched"
+                                    class="error-span">Permanent or is required
+                                    field.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </p-accordionTab>
+    </p-accordion>
+
+    <p-accordion>
+        <p-accordionTab header="Payroll
+            Details (As on Date)" [selected]="true">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Monthly / Daily</span>
+                            <mat-select class="form-control"
+                                formControlName="PaymentTenure"
+                                placeholder="Please Select Monthly / Daily">
+                                <!-- <mat-option value="">--Select--</mat-option> -->
+                                <mat-option value="Monthly">Monthly</mat-option>
+                                <mat-option value="Yearly">Yearly</mat-option>
+                                <mat-option value="Daily">Daily</mat-option>
+                            </mat-select>
+                            <span
+                                *ngIf="employeeInformationForm.controls.PaymentTenure.errors?.required
+                                &&
+                                employeeInformationForm.controls.PaymentTenure.touched"
+                                class="error-span">Monthly / Daily is required
+                                field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Basic Salary</span>
+                            <input type="text" (change)="CalculateTotal()"
+                                (blur)="CalculateTotal()" placeholder="Please
+                                Enter
+                                Basic Salary"
+                                class="form-control" formControlName="Basic" />
+                            <span
+                                *ngIf="employeeInformationForm.controls.Basic.errors?.required
+                                &&
+                                employeeInformationForm.controls.Basic.touched"
+                                class="error-span">Basic is required field.</span>
+                            <span
+                                *ngIf="employeeInformationForm.get('Basic').errors?.pattern
+                                &&
+                                employeeInformationForm.controls.Basic.touched"
+                                class="error-span">Basic Salary should be
+                                numerics
+                                only in format of XXXXXXXXXX.XX</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">House Rental Allowance
+                                (HRA)</span>
+                            <input type="text" (change)="CalculateTotal()"
+                                (blur)="CalculateTotal()" placeholder="Please
+                                Enter
+                                HRA"
+                                class="form-control" formControlName="HRA">
+                            <span
+                                *ngIf="employeeInformationForm.controls.HRA.errors?.required
+                                && employeeInformationForm.controls.HRA.touched"
+                                class="error-span">House Rental Allowance (HRA)
+                                is
+                                required field.</span>
+                            <span
+                                *ngIf="employeeInformationForm.get('HRA').errors?.pattern
+                                && employeeInformationForm.controls.HRA.touched"
+                                class="error-span">House Rental Allowance (HRA)
+                                should be numerics only in format of
+                                XXXXXXXX.XX</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Dearness Allowance (DA)</span>
+                            <input type="text" (change)="CalculateTotal()"
+                                (blur)="CalculateTotal()" placeholder="Please
+                                Enter
+                                Dearness Allowance"
+                                class="form-control"
+                                formControlName="DearnessAllowance">
+                            <span
+                                *ngIf="employeeInformationForm.controls.DearnessAllowance.errors?.required
+                                &&
+                                employeeInformationForm.controls.DearnessAllowance.touched"
+                                class="error-span">Dearness Allowance (DA) is
+                                required field.</span>
+                            <span
+                                *ngIf="employeeInformationForm.get('DearnessAllowance').errors?.pattern
+                                &&
+                                employeeInformationForm.controls.DearnessAllowance.touched"
+                                class="error-span">Dearness Allowance (DA)
+                                should be
+                                numerics only in format of
+                                XXXXXXXX.XX</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Conveyance Allowance
+                                (CA)</span>
+                            <input type="text" (change)="CalculateTotal()"
+                                (blur)="CalculateTotal()" placeholder="Please
+                                Enter
+                                Conveyance Allowance"
+                                class="form-control"
+                                formControlName="ConveyanceAllowance">
+                            <span
+                                *ngIf="employeeInformationForm.controls.ConveyanceAllowance.errors?.required
+                                &&
+                                employeeInformationForm.controls.ConveyanceAllowance.touched"
+                                class="error-span">Conveyance Allowance (CA) is
+                                required field.</span>
+                            <span
+                                *ngIf="employeeInformationForm.get('ConveyanceAllowance').errors?.pattern
+                                &&
+                                employeeInformationForm.controls.ConveyanceAllowance.touched"
+                                class="error-span">Conveyance Allowance (CA)
+                                should
+                                be numerics only in format of
+                                XXXXXXXXX.XX</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Medical Allowance (MA)</span>
+                            <input type="text" (change)="CalculateTotal()"
+                                (blur)="CalculateTotal()" placeholder="Please
+                                Enter
+                                Medical Allowance"
+                                class="form-control"
+                                formControlName="MedicalAllowance">
+                            <span
+                                *ngIf="employeeInformationForm.controls.MedicalAllowance.errors?.required
+                                &&
+                                employeeInformationForm.controls.MedicalAllowance.touched"
+                                class="error-span">Medical Allowance (MA) is
+                                required field.</span>
+                            <span
+                                *ngIf="employeeInformationForm.get('MedicalAllowance').errors?.pattern
+                                &&
+                                employeeInformationForm.controls.MedicalAllowance.touched"
+                                class="error-span">Medical Allowance (MA) should
+                                be
+                                numerics only in format of
+                                XXXXXXXX.XX</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Incentives</span>
+                            <input type="text" (change)="CalculateTotal()"
+                                (blur)="CalculateTotal()" placeholder="Please
+                                Enter
+                                Incentives"
+                                class="form-control"
+                                formControlName="Incentives">
+                            <span
+                                *ngIf="employeeInformationForm.controls.Incentives.errors?.required
+                                &&
+                                employeeInformationForm.controls.Incentives.touched"
+                                class="error-span">Incentives is required field.</span>
+                            <span
+                                *ngIf="employeeInformationForm.get('Incentives').errors?.pattern
+                                &&
+                                employeeInformationForm.controls.Incentives.touched"
+                                class="error-span">Incentives should be numerics
+                                only in format of
+                                XXXXXXXXX.XX</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Other Allowances (OA)</span>
+                            <input type="text" (change)="CalculateTotal()"
+                                (blur)="CalculateTotal()" placeholder="Please
+                                Enter
+                                Other Allowances"
+                                class="form-control"
+                                formControlName="OtherAllowances">
+                            <span
+                                *ngIf="employeeInformationForm.controls.OtherAllowances.errors?.required
+                                &&
+                                employeeInformationForm.controls.OtherAllowances.touched"
+                                class="error-span">Other Allowances (OA) is
+                                required
+                                field.</span>
+                            <span
+                                *ngIf="employeeInformationForm.get('OtherAllowances').errors?.pattern
+                                &&
+                                employeeInformationForm.controls.OtherAllowances.touched"
+                                class="error-span">Other Allowances (OA) should
+                                be
+                                numerics only in format of
+                                XXXXXXXX.XX</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Total Salary</span>
+                            <input type="text" class="form-control"
+                                placeholder="Please Enter Total Salary"
+                                disabled="true"
+                                formControlName="TotalSalary">
+                            <span
+                                *ngIf="employeeInformationForm.controls.TotalSalary.errors?.required
+                                &&
+                                employeeInformationForm.controls.TotalSalary.touched"
+                                class="error-span">Total Salary is required
+                                field.</span>
+                            <span
+                                *ngIf="employeeInformationForm.get('TotalSalary').errors?.pattern
+                                &&
+                                employeeInformationForm.controls.TotalSalary.touched"
+                                class="error-span">Total Salary should be
+                                numerics
+                                only in format of
+                                XXXXXXXXXXXXXXXXXXXX.XX</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-accordionTab>
+    </p-accordion>
+
+    <p-accordion>
+        <p-accordionTab header="Documents
+            Upload" [selected]="true">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Name of the Document</span>
+                            <input type="text" #documentName
+                                class="form-control"
+                                placeholder="Please Enter Name of the Document"
+                                formControlName="NameOfDocument">
+                            <span
+                                *ngIf="employeeInformationForm.controls.NameOfDocument.errors?.required
+                                &&
+                                employeeInformationForm.controls.NameOfDocument.touched"
+                                class="error-span">Name of the Document is
+                                required
+                                field.</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <span class="label-control">Document Upload</span>
+                            <input type="file" class="form-control"
+                                accept="application/pdf, image/jpeg, image/png"
+                                (change)="onFileChange($event)">
+                            <span *ngIf="isFileError" class="error-span">Please
+                                upload file type of jpeg/png/pdf.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-accordionTab>
+    </p-accordion>
+
+    <p-accordion>
+        <p-accordionTab header="Documents
+            Details" [selected]="true">
+            <div class="container-fluid">
+                <div class="row m-b-25">
+                    <div class="col-md-12">
+                        <div>
+                            <table class="table table-striped table-bordered
+                                dt-responsive nowrap" cellspacing="0"
+                                cellpadding="4" id="grdOrganizations">
+                                <tbody>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Name of the Document</th>
+                                    </tr>
+                                    <tr *ngFor="let document of documentList;let
+                                        i=
+                                        index">
+                                        <td class="text-align-center">
+                                            <span>{{i+1}}</span>
+                                        </td>
+                                        <td class="text-align-center">
+                                            <span>
+                                                <a class="text-deco-underline"
+                                                    (click)="downloadFile(document)">{{document.employeeDocName}}</a></span>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-accordionTab>
+    </p-accordion>
+</div>
+
+<div class="mgt-20 pull-right">
+    <mat-progress-bar *ngIf="disableButton" mode="indeterminate"></mat-progress-bar>
+    <div class="row pull-right btSection">
+        <div class="col-md12">
+            <button pButton type="submit" [disabled]="disableButton" label="Add
+                Employee" (click)="addNewEmployee()"
+                class="ui-button-rounded"></button>
+            <button pButton type="submit" [disabled]="disableButton" #saveButton
+                label="Save" (click)="saveEmployee()"
+                class="ui-button-rounded"></button>
+            <button pButton type="submit" [disabled]="disableButton"
+                label="Find" (click)="findEmployee()"
+                class="ui-button-rounded"></button>
+            <button pButton type="submit" [disabled]="disableButton"
+                #modifyButton label="Modify" (click)="modifyEmployee()"
+                class="ui-button-rounded"></button>
+            <button pButton type="submit" [disabled]="disableButton"
+                label="Clear" (click)="clearEmployeeDetails()"
+                class="ui-button-rounded"></button>
+        </div>
+    </div>
+</div>
